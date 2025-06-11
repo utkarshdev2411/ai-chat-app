@@ -1,5 +1,5 @@
 const Session = require('../models/Session');
-const { generateResponse } = require('../utils/gemini');
+const { generateResponse } = require('../utils/langchain');
 
 // Create a new session
 exports.createSession = async (req, res) => {
@@ -85,14 +85,8 @@ exports.addMessage = async (req, res) => {
     
     session.history.push(userMessage);
     
-    // Build the prompt for Gemini
-    let prompt = '';
-    for (const message of session.history) {
-      prompt += `${message.role === 'user' ? 'User' : 'AI'}: ${message.text}\n`;
-    }
-    
-    // Call Gemini API
-    const aiText = await generateResponse(prompt);
+    // Call LangChain with user message and history
+    const aiText = await generateResponse(text.trim(), session.history);
     
     // Add AI response to history
     const aiMessage = {

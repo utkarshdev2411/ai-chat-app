@@ -1,65 +1,50 @@
 const axios = require('axios');
 
-// Max retries for rate limits
-const MAX_RETRIES = 3;
-// Base delay for exponential backoff (in ms)
-const BASE_DELAY = 1000;
-
 /**
- * Generate a response from Gemini API
- * @param {string} prompt - The prompt to send to Gemini
- * @returns {Promise<string>} - The AI response text
+ * Generates a response from the Gemini API
+ * @param {string} prompt - The user's prompt/message
+ * @returns {Promise<string>} - The generated response text
  */
-async function generateResponse(prompt, retryCount = 0) {
+exports.generateResponse = async (prompt) => {
   try {
-    const API_KEY = process.env.GEMINI_API_KEY;
-    if (!API_KEY) {
-      throw new Error('GEMINI_API_KEY is not set in environment variables');
+    const apiKey = process.env.GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error('Gemini API key not found');
     }
-
-    const response = await axios.post(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1000
+    
+    // API endpoint for Gemini Pro with API key as a query parameter
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    const response = await axios.post(url, {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
         }
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`
-        },
-        timeout: 15000 // 15 seconds timeout
+      ],
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
       }
-    );
-
-    // Extract the text from the response
-    const generatedText = response.data.candidates[0].content.parts[0].text;
+    });
+    
+    // Extract the generated text from the response
+    const generatedText = response.data.candidates[0]?.content?.parts[0]?.text;
+    
+    if (!generatedText) {
+      throw new Error('No text generated from the API');
+    }
+    
     return generatedText;
   } catch (error) {
-    // Handle rate limiting with exponential backoff
-    if (error.response && error.response.status === 429 && retryCount < MAX_RETRIES) {
-      const delay = BASE_DELAY * Math.pow(2, retryCount);
-      console.log(`Rate limited. Retrying in ${delay}ms...`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-      return generateResponse(prompt, retryCount + 1);
-    }
-
-    // Handle other errors
     console.error('Gemini API error:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.error?.message || 'Failed to generate AI response');
+    throw error;
   }
-}
-
-module.exports = { generateResponse };
+};
 
