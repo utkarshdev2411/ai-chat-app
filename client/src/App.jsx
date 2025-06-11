@@ -24,6 +24,11 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/preferences" element={<PreferencesPage />} />
             <Route path="/app" element={<AppPage />} />
+            <Route path="/chat" element={
+              <SessionProvider>
+                <ChatPage />
+              </SessionProvider>
+            } />
           </Route>
         </Routes>
       </Router>
