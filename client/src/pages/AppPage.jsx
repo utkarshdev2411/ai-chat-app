@@ -28,10 +28,16 @@ const AppPage = () => {
       
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 flex items-center justify-center">
+          <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 flex flex-col items-center justify-center space-y-6">
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Chat interface will be implemented here in Module 4 & 5
+              Welcome to AI Chat App! You can now start chatting with AI.
             </p>
+            <a 
+              href="/chat" 
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg shadow-md transition-colors duration-300"
+            >
+              Go to Chat
+            </a>
           </div>
         </div>
       </main>
