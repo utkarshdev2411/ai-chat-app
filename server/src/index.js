@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 // Define API routes here
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
-app.use('/api/sessions', require('./routes/sessions')); // Implemented in Module 4
+app.use('/api/stories', require('./routes/stories')); // Story-based API
 
 // Error handling middleware
 app.use((err, req, res, next) => {

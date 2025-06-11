@@ -3,23 +3,29 @@ const router = express.Router();
 const sessionController = require('../controllers/session');
 const authMiddleware = require('../middleware/auth');
 
-// Protect all session routes
+// Protect all routes
 router.use(authMiddleware);
 
-// GET /api/sessions - Get all sessions for current user
-router.get('/', sessionController.getUserSessions);
+// GET /api/stories/scenarios - Get all available scenarios
+router.get('/scenarios', sessionController.getScenarios);
 
-// POST /api/sessions - Create a new session
-router.post('/', sessionController.createSession);
+// GET /api/stories - Get all stories for current user
+router.get('/', sessionController.getUserStories);
 
-// GET /api/sessions/:sessionId - Get a specific session
-router.get('/:sessionId', sessionController.getSession);
+// POST /api/stories - Create a new story
+router.post('/', sessionController.createStory);
 
-// POST /api/sessions/:sessionId/message - Add message to session and get AI response
-router.post('/:sessionId/message', sessionController.addMessage);
+// GET /api/stories/:sessionId - Get a specific story
+router.get('/:sessionId', sessionController.getStory);
 
-// DELETE /api/sessions/:sessionId - Delete a session
-router.delete('/:sessionId', sessionController.deleteSession);
+// POST /api/stories/:sessionId/action - Submit action to story and get continuation
+router.post('/:sessionId/action', sessionController.submitAction);
+
+// PUT /api/stories/:sessionId/title - Rename a story
+router.put('/:sessionId/title', sessionController.renameStory);
+
+// DELETE /api/stories/:sessionId - Delete a story
+router.delete('/:sessionId', sessionController.deleteStory);
 
 module.exports = router;
 
