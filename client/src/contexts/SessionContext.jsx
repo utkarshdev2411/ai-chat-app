@@ -15,147 +15,194 @@ export const useSession = () => {
 // Provider component
 export const SessionProvider = ({ children }) => {
   const { user, token } = useAuth();
-  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [currentStoryId, setCurrentStoryId] = useState(null);
+  const [currentStory, setCurrentStory] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [sessions, setSessions] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [scenarios, setScenarios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [sending, setSending] = useState(false);
 
-  // Load sessions list when user is logged in
+  // Load stories and scenarios when user is logged in
   useEffect(() => {
     if (user && token) {
-      fetchSessions();
+      fetchStories();
+      fetchScenarios();
     } else {
-      setSessions([]);
+      setStories([]);
       setMessages([]);
-      setCurrentSessionId(null);
+      setCurrentStoryId(null);
+      setCurrentStory(null);
     }
   }, [user, token]);
 
-  // Load current session messages when session changes
+  // Load current story messages when story changes
   useEffect(() => {
-    if (currentSessionId) {
-      fetchSessionMessages(currentSessionId);
+    if (currentStoryId) {
+      fetchStoryMessages(currentStoryId);
     } else {
       setMessages([]);
+      setCurrentStory(null);
     }
-  }, [currentSessionId]);
+  }, [currentStoryId]);
 
-  // Fetch all sessions for current user
-  const fetchSessions = async () => {
+  // Fetch all scenarios
+  const fetchScenarios = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/stories/scenarios`);
+      setScenarios(res.data);
+    } catch (err) {
+      console.error('Error fetching scenarios:', err);
+      setError(err.response?.data?.message || 'Failed to load scenarios');
+    }
+  };
+
+  // Fetch all stories for current user
+  const fetchStories = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/sessions`);
-      setSessions(res.data);
+      const res = await axios.get(`${API_URL}/stories`);
+      setStories(res.data);
       setError(null);
 
-      // If no current session is selected and we have sessions, select the most recent one
-      if (!currentSessionId && res.data.length > 0) {
-        setCurrentSessionId(res.data[0]._id);
+      // If no current story is selected and we have stories, select the most recent one
+      if (!currentStoryId && res.data.length > 0) {
+        setCurrentStoryId(res.data[0]._id);
       }
     } catch (err) {
-      console.error('Error fetching sessions:', err);
-      setError(err.response?.data?.message || 'Failed to load sessions');
+      console.error('Error fetching stories:', err);
+      setError(err.response?.data?.message || 'Failed to load stories');
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch messages for a specific session
-  const fetchSessionMessages = async (sessionId) => {
-    if (!sessionId) return;
+  // Fetch messages for a specific story
+  const fetchStoryMessages = async (storyId) => {
+    if (!storyId) return;
     
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/sessions/${sessionId}`);
+      const res = await axios.get(`${API_URL}/stories/${storyId}`);
+      setCurrentStory(res.data);
       setMessages(res.data.history || []);
       setError(null);
     } catch (err) {
-      console.error('Error fetching session messages:', err);
-      setError(err.response?.data?.message || 'Failed to load messages');
+      console.error('Error fetching story messages:', err);
+      setError(err.response?.data?.message || 'Failed to load story');
     } finally {
       setLoading(false);
     }
   };
 
-  // Create a new session
-  const createSession = async () => {
+  // Create a new story
+  const createStory = async (scenarioKey = 'space-colony', character = { name: 'Commander', role: 'Colony Leader' }) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/sessions`);
-      const newSessionId = res.data.sessionId;
+      const res = await axios.post(`${API_URL}/stories`, {
+        scenarioKey,
+        character
+      });
+      const newStoryId = res.data.sessionId;
       
-      // Add to sessions list
-      setSessions([{ _id: newSessionId, createdAt: new Date() }, ...sessions]);
+      // Add to stories list
+      const newStory = {
+        _id: newStoryId,
+        title: res.data.title,
+        scenario: scenarioKey,
+        character,
+        createdAt: res.data.createdAt
+      };
+      setStories([newStory, ...stories]);
       
-      // Set as current session
-      setCurrentSessionId(newSessionId);
+      // Set as current story
+      setCurrentStoryId(newStoryId);
       setMessages([]);
       setError(null);
       
-      return newSessionId;
+      return newStoryId;
     } catch (err) {
-      console.error('Error creating session:', err);
-      setError(err.response?.data?.message || 'Failed to create new session');
+      console.error('Error creating story:', err);
+      setError(err.response?.data?.message || 'Failed to create new story');
       return null;
     } finally {
       setLoading(false);
     }
   };
 
-  // Send message and get AI response
-  const sendMessage = async (text) => {
-    if (!currentSessionId || !text.trim()) return;
+  // Submit action to story
+  const submitAction = async (text, actionType = 'action') => {
+    if (!currentStoryId || (!text.trim() && actionType !== 'continue')) return;
     
     setSending(true);
     
     try {
-      // Optimistically add user message to UI
-      const userMessage = {
-        role: 'user',
-        text: text.trim(),
-        timestamp: new Date()
-      };
-      
-      setMessages(prevMessages => [...prevMessages, userMessage]);
+      // Optimistically add user action to UI (only if it's a custom action)
+      if (actionType === 'action') {
+        const userAction = {
+          role: 'user',
+          text: text.trim(),
+          inputType: actionType,
+          timestamp: new Date()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, userAction]);
+      }
       
       // Send to API
       const res = await axios.post(
-        `${API_URL}/sessions/${currentSessionId}/message`,
-        { text: text.trim() }
+        `${API_URL}/stories/${currentStoryId}/action`,
+        { 
+          text: actionType === 'continue' ? 'Continue the story...' : text.trim(),
+          actionType
+        }
       );
       
-      // Add AI response to messages
-      const aiMessage = res.data.aiMessage;
-      setMessages(prevMessages => [...prevMessages, aiMessage]);
+      // Add AI story response to messages
+      const storyUpdate = res.data.storyUpdate;
+      setMessages(prevMessages => {
+        // If this was a continue action, add both user continue and AI response
+        if (actionType === 'continue') {
+          const continueAction = {
+            role: 'user',
+            text: 'Continue the story...',
+            inputType: 'continue',
+            timestamp: new Date(storyUpdate.timestamp - 1000) // Slightly before AI response
+          };
+          return [...prevMessages, continueAction, storyUpdate];
+        }
+        // For custom actions, just add the AI response
+        return [...prevMessages, storyUpdate];
+      });
       setError(null);
       
-      return aiMessage;
+      return storyUpdate;
     } catch (err) {
-      console.error('Error sending message:', err);
-      setError(err.response?.data?.message || 'Failed to send message');
+      console.error('Error submitting action:', err);
+      setError(err.response?.data?.message || 'Failed to submit action');
       return null;
     } finally {
       setSending(false);
     }
   };
 
-  // Delete a session
-  const deleteSession = async (sessionId) => {
+  // Delete a story
+  const deleteStory = async (storyId) => {
     try {
-      await axios.delete(`${API_URL}/sessions/${sessionId}`);
+      await axios.delete(`${API_URL}/stories/${storyId}`);
       
-      // Remove from sessions list
-      setSessions(sessions.filter(session => session._id !== sessionId));
+      // Remove from stories list
+      setStories(stories.filter(story => story._id !== storyId));
       
-      // If it was the current session, select a new one or clear
-      if (sessionId === currentSessionId) {
-        const remainingSessions = sessions.filter(session => session._id !== sessionId);
-        if (remainingSessions.length > 0) {
-          setCurrentSessionId(remainingSessions[0]._id);
+      // If it was the current story, select a new one or clear
+      if (storyId === currentStoryId) {
+        const remainingStories = stories.filter(story => story._id !== storyId);
+        if (remainingStories.length > 0) {
+          setCurrentStoryId(remainingStories[0]._id);
         } else {
-          setCurrentSessionId(null);
+          setCurrentStoryId(null);
+          setCurrentStory(null);
           setMessages([]);
         }
       }
@@ -163,29 +210,63 @@ export const SessionProvider = ({ children }) => {
       setError(null);
       return true;
     } catch (err) {
-      console.error('Error deleting session:', err);
-      setError(err.response?.data?.message || 'Failed to delete session');
+      console.error('Error deleting story:', err);
+      setError(err.response?.data?.message || 'Failed to delete story');
+      return false;
+    }
+  };
+
+  // Rename a story
+  const renameStory = async (storyId, newTitle) => {
+    try {
+      const res = await axios.put(`${API_URL}/stories/${storyId}/title`, {
+        title: newTitle
+      });
+      
+      // Update stories list
+      setStories(stories.map(story => 
+        story._id === storyId 
+          ? { ...story, title: newTitle }
+          : story
+      ));
+      
+      // Update current story if needed
+      if (currentStory && currentStory._id === storyId) {
+        setCurrentStory({ ...currentStory, title: newTitle });
+      }
+      
+      setError(null);
+      return true;
+    } catch (err) {
+      console.error('Error renaming story:', err);
+      setError(err.response?.data?.message || 'Failed to rename story');
       return false;
     }
   };
 
   const value = {
-    currentSessionId,
-    setCurrentSessionId,
+    // Story management
+    currentStoryId,
+    setCurrentStoryId,
+    currentStory,
     messages,
-    sessions,
+    stories,
+    scenarios,
     loading,
     sending,
     error,
-    fetchSessions,
-    fetchSessionMessages,
-    createSession,
-    sendMessage,
-    deleteSession
+    
+    // Actions
+    fetchStories,
+    fetchScenarios,
+    fetchStoryMessages,
+    createStory,
+    submitAction,
+    deleteStory,
+    renameStory
   };
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 };
 
 export default SessionContext;
-

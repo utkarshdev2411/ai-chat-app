@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import PreferencesPage from './pages/PreferencesPage';
 import AppPage from './pages/AppPage';
-import ChatPage from './pages/ChatPage';
+import StoryPage from './pages/ChatPage'; // Renamed to StoryPage internally
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
             <Route path="/app" element={<AppPage />} />
             <Route path="/chat" element={
               <SessionProvider>
-                <ChatPage />
+                <StoryPage />
               </SessionProvider>
             } />
           </Route>
