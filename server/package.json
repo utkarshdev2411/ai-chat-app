@@ -1,16 +1,16 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI Storytelling App - Backend Server",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["ai", "storytelling", "express", "mongodb"],
+  "author": "Your Name",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@langchain/google-genai": "^0.2.10",

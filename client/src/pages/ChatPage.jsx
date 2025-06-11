@@ -4,23 +4,27 @@ import { useAuth } from '../contexts/AuthContext';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import SessionSidebar from '../components/SessionSidebar';
+import ScenarioSelector from '../components/ScenarioSelector';
 
-const ChatPage = () => {
+const StoryPage = () => {
   const { user } = useAuth();
   const { 
-    currentSessionId, 
-    setCurrentSessionId,
+    currentStoryId, 
+    setCurrentStoryId,
+    currentStory,
     messages, 
-    sessions,
+    stories,
+    scenarios,
     loading, 
     sending,
     error,
-    createSession,
-    sendMessage,
-    deleteSession
+    createStory,
+    submitAction,
+    deleteStory
   } = useSession();
   const [showSidebar, setShowSidebar] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [showScenarioSelector, setShowScenarioSelector] = useState(false);
 
   // Show error message when error occurs
   useEffect(() => {
@@ -31,33 +35,36 @@ const ChatPage = () => {
     }
   }, [error]);
 
-  // Handle sending a new message
-  const handleSendMessage = async (text) => {
-    if (!currentSessionId) {
-      // Create a new session if none exists
-      const newSessionId = await createSession();
-      if (newSessionId) {
-        await sendMessage(text);
-      }
-    } else {
-      await sendMessage(text);
+  // Handle submitting an action
+  const handleSubmitAction = async (text, actionType = 'action') => {
+    if (!currentStoryId) {
+      // Show scenario selector if no story exists
+      setShowScenarioSelector(true);
+      return;
     }
+    await submitAction(text, actionType);
   };
 
-  // Handle creating a new session
-  const handleNewSession = async () => {
-    await createSession();
+  // Handle creating a new story
+  const handleNewStory = () => {
+    setShowScenarioSelector(true);
   };
 
-  // Handle session selection
-  const handleSelectSession = (sessionId) => {
-    setCurrentSessionId(sessionId);
+  // Handle scenario selection and story creation
+  const handleScenarioSelect = async (scenarioKey, character) => {
+    setShowScenarioSelector(false);
+    await createStory(scenarioKey, character);
   };
 
-  // Handle session deletion with confirmation
-  const handleDeleteSession = async (sessionId) => {
-    if (window.confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
-      await deleteSession(sessionId);
+  // Handle story selection
+  const handleSelectStory = (storyId) => {
+    setCurrentStoryId(storyId);
+  };
+
+  // Handle story deletion with confirmation
+  const handleDeleteStory = async (storyId) => {
+    if (window.confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
+      await deleteStory(storyId);
     }
   };
 
@@ -76,11 +83,11 @@ const ChatPage = () => {
       {/* Sidebar */}
       <div className={`${showSidebar ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transform transition-transform duration-300 ease-in-out fixed lg:static inset-0 z-10 lg:z-0 lg:h-full ${showSidebar ? 'w-64' : 'w-0'} lg:w-64 flex-shrink-0`}>
         <SessionSidebar
-          sessions={sessions}
-          currentSessionId={currentSessionId}
-          onSelectSession={handleSelectSession}
-          onNewSession={handleNewSession}
-          onDeleteSession={handleDeleteSession}
+          stories={stories}
+          currentStoryId={currentStoryId}
+          onSelectStory={handleSelectStory}
+          onNewStory={handleNewStory}
+          onDeleteStory={handleDeleteStory}
         />
       </div>
 
@@ -89,7 +96,14 @@ const ChatPage = () => {
         {/* Header */}
         <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 lg:px-6">
           <div className="flex items-center">
-            <h1 className="text-xl font-semibold">AI Chat</h1>
+            <h1 className="text-xl font-semibold">
+              {currentStory ? currentStory.title : 'AI Storytelling'}
+            </h1>
+            {currentStory && (
+              <div className="ml-3 text-sm text-gray-500 dark:text-gray-400">
+                {currentStory.character?.name} • {scenarios.find(s => s.key === currentStory.scenario)?.name || currentStory.scenario}
+              </div>
+            )}
           </div>
           
           <div className="flex items-center">
@@ -122,17 +136,27 @@ const ChatPage = () => {
           messages={messages}
           loading={loading}
           typingIndicator={sending}
+          isStoryMode={true}
         />
 
         {/* Message input */}
         <MessageInput
-          onSendMessage={handleSendMessage}
+          onSubmitAction={handleSubmitAction}
           disabled={loading || sending}
+          isStoryMode={true}
         />
       </div>
+      {/* Scenario Selector Modal */}
+      {showScenarioSelector && (
+        <ScenarioSelector
+          scenarios={scenarios}
+          onSelect={handleScenarioSelect}
+          onCancel={() => setShowScenarioSelector(false)}
+        />
+      )}
     </div>
   );
 };
 
-export default ChatPage;
+export default StoryPage;
 

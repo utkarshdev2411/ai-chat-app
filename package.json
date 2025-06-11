@@ -1,0 +1,17 @@
+{
+  "name": "ai-storytelling-app",
+  "version": "1.0.0",
+  "description": "An interactive AI storytelling application",
+  "scripts": {
+    "start": "bash start.sh",
+    "dev": "bash start.sh",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "seed": "cd server && node src/seed/scenarios.js",
+    "install:all": "cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["ai", "storytelling", "interactive", "fiction", "gemini"],
+  "author": "Your Name",
+  "license": "MIT"
+}
+
