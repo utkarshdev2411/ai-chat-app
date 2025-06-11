@@ -5,6 +5,7 @@ import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import SessionSidebar from '../components/SessionSidebar';
 import ScenarioSelector from '../components/ScenarioSelector';
+import AnimatedAvatar from '../components/AnimatedAvatar';
 
 const StoryPage = () => {
   const { user } = useAuth();
@@ -114,7 +115,7 @@ const StoryPage = () => {
               className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center overflow-hidden"
             >
               {user?.avatar ? (
-                <img src={user.avatar} alt="User avatar" className="h-full w-full object-cover" />
+                <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
               ) : (
                 <span className="text-sm font-bold text-white">
                   {user?.email?.charAt(0).toUpperCase() || 'U'}

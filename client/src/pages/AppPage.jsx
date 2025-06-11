@@ -1,4 +1,5 @@
 import { useAuth } from '../contexts/AuthContext';
+import AnimatedAvatar from '../components/AnimatedAvatar';
 
 const AppPage = () => {
   const { user, logout } = useAuth();
@@ -10,10 +11,11 @@ const AppPage = () => {
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI Storytelling App</h1>
           <div className="flex items-center space-x-4">
             {user?.avatar && (
-              <img 
+              <AnimatedAvatar 
                 src={user.avatar} 
                 alt="User avatar" 
                 className="w-8 h-8 rounded-full"
+                size={32}
               />
             )}
             <button 

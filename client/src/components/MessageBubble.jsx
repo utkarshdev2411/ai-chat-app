@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import AnimatedAvatar from './AnimatedAvatar';
 
 const MessageBubble = ({ message, isStoryMode = false }) => {
   const { user } = useAuth();
@@ -60,7 +61,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
             style={{ backgroundColor: !user?.avatar ? '#3B82F6' : 'transparent' }}
           >
             {user?.avatar ? (
-              <img src={user.avatar} alt="User avatar" className="h-full w-full object-cover" />
+              <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
             ) : (
               <span className="text-sm font-bold text-white">
                 {user?.email?.charAt(0).toUpperCase() || 'U'}
@@ -98,7 +99,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
           style={{ backgroundColor: !user?.avatar ? '#3B82F6' : 'transparent' }}
         >
           {user?.avatar ? (
-            <img src={user.avatar} alt="User avatar" className="h-full w-full object-cover" />
+            <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
           ) : (
             <span className="text-sm font-bold text-white">
               {user?.email?.charAt(0).toUpperCase() || 'U'}

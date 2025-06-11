@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import AnimatedAvatar from '../components/AnimatedAvatar';
 
-// Avatar options (would typically be imported from files)
+// Replace static avatars with animated character options
 const AVATAR_OPTIONS = [
-  { id: 'avatar1', src: 'https://i.pravatar.cc/150?img=1', alt: 'Avatar 1' },
-  { id: 'avatar2', src: 'https://i.pravatar.cc/150?img=2', alt: 'Avatar 2' },
-  { id: 'avatar3', src: 'https://i.pravatar.cc/150?img=3', alt: 'Avatar 3' },
-  { id: 'avatar4', src: 'https://i.pravatar.cc/150?img=4', alt: 'Avatar 4' },
-  { id: 'avatar5', src: 'https://i.pravatar.cc/150?img=5', alt: 'Avatar 5' },
-  { id: 'avatar6', src: 'https://i.pravatar.cc/150?img=6', alt: 'Avatar 6' },
+  { id: 'avatar1', src: 'https://avatars.dicebear.com/api/avataaars/avatar1.svg', alt: 'Animated Avatar 1' },
+  { id: 'avatar2', src: 'https://avatars.dicebear.com/api/bottts/avatar2.svg', alt: 'Animated Avatar 2' },
+  { id: 'avatar3', src: 'https://avatars.dicebear.com/api/personas/avatar3.svg', alt: 'Animated Avatar 3' },
+  { id: 'avatar4', src: 'https://avatars.dicebear.com/api/micah/avatar4.svg', alt: 'Animated Avatar 4' },
+  { id: 'avatar5', src: 'https://avatars.dicebear.com/api/open-peeps/avatar5.svg', alt: 'Animated Avatar 5' },
+  { id: 'avatar6', src: 'https://avatars.dicebear.com/api/pixel-art/avatar6.svg', alt: 'Animated Avatar 6' },
 ];
-
 // Theme options
 const THEME_OPTIONS = [
   { id: 'light', name: 'Light', color: '#f9fafb' },
@@ -84,7 +84,12 @@ const PreferencesPage = () => {
                   className={`cursor-pointer rounded-full overflow-hidden border-4 ${selectedAvatar === avatar.src ? 'border-blue-500' : 'border-transparent'}`}
                   onClick={() => setSelectedAvatar(avatar.src)}
                 >
-                  <img src={avatar.src} alt={avatar.alt} className="w-full h-auto" />
+                  <AnimatedAvatar 
+                    src={avatar.src} 
+                    alt={avatar.alt} 
+                    className="w-full h-auto" 
+                    size={80}
+                  />
                 </div>
               ))}
             </div>
