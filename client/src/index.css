@@ -1,7 +1,9 @@
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Basic styles */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -10,4 +12,53 @@
 
 body {
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
+
+/* Manual utility classes as fallback */
+.min-h-screen { min-height: 100vh; }
+.bg-gray-50 { background-color: #f9fafb; }
+.bg-gray-100 { background-color: #f3f4f6; }
+.bg-gray-900 { background-color: #111827; }
+.bg-white { background-color: #ffffff; }
+.bg-blue-600 { background-color: #2563eb; }
+.bg-red-500 { background-color: #ef4444; }
+
+.text-white { color: #ffffff; }
+.text-gray-900 { color: #111827; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+.container { width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.space-y-8 > * + * { margin-top: 2rem; }
+
+.rounded-md { border-radius: 0.375rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+
+.shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+
+.text-center { text-align: center; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.font-bold { font-weight: 700; }
+
+.w-full { width: 100%; }
+.h-screen { height: 100vh; }
+
+/* Dark mode */
+.dark .bg-gray-900 { background-color: #111827; }
+.dark .text-white { color: #ffffff; }
+.dark .bg-gray-800 { background-color: #1f2937; }
+
+/* Theme-specific styles */
+.theme-light { background-color: #f9fafb; color: #111827; }
+.theme-dark { background-color: #1f2937; color: #f9fafb; }
+.theme-blue { background-color: #dbeafe; color: #1e3a8a; }
+.theme-green { background-color: #d1fae5; color: #064e3b; }
