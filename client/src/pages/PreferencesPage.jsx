@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import AnimatedAvatar from '../components/AnimatedAvatar';
 
-// Replace static avatars with animated character options
+// Updated avatar options with current DiceBear API format
 const AVATAR_OPTIONS = [
-  { id: 'avatar1', src: 'https://avatars.dicebear.com/api/avataaars/avatar1.svg', alt: 'Animated Avatar 1' },
-  { id: 'avatar2', src: 'https://avatars.dicebear.com/api/bottts/avatar2.svg', alt: 'Animated Avatar 2' },
-  { id: 'avatar3', src: 'https://avatars.dicebear.com/api/personas/avatar3.svg', alt: 'Animated Avatar 3' },
-  { id: 'avatar4', src: 'https://avatars.dicebear.com/api/micah/avatar4.svg', alt: 'Animated Avatar 4' },
-  { id: 'avatar5', src: 'https://avatars.dicebear.com/api/open-peeps/avatar5.svg', alt: 'Animated Avatar 5' },
-  { id: 'avatar6', src: 'https://avatars.dicebear.com/api/pixel-art/avatar6.svg', alt: 'Animated Avatar 6' },
+  { id: 'avatar1', src: 'https://api.dicebear.com/6.x/avataaars/svg?seed=avatar1', alt: 'Animated Avatar 1' },
+  { id: 'avatar2', src: 'https://api.dicebear.com/6.x/bottts/svg?seed=avatar2', alt: 'Animated Avatar 2' },
+  { id: 'avatar3', src: 'https://api.dicebear.com/6.x/personas/svg?seed=avatar3', alt: 'Animated Avatar 3' },
+  { id: 'avatar4', src: 'https://api.dicebear.com/6.x/micah/svg?seed=avatar4', alt: 'Animated Avatar 4' },
+  { id: 'avatar5', src: 'https://api.dicebear.com/6.x/adventurer/svg?seed=avatar5', alt: 'Animated Avatar 5' },
+  { id: 'avatar6', src: 'https://api.dicebear.com/6.x/pixel-art/svg?seed=avatar6', alt: 'Animated Avatar 6' },
 ];
 // Theme options
 const THEME_OPTIONS = [

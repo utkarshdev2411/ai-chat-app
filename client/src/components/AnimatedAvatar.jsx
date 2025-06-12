@@ -18,7 +18,14 @@ const AnimatedAvatar = ({ src, alt, className, size = 40 }) => {
   };
   
   // Check if it's a Lottie animation or a regular image
-  const isLottie = src.endsWith('.json') || src.includes('lottiefiles');
+  const isLottie = src && (src.endsWith('.json') || src.includes('lottiefiles'));
+  
+  // Added error handling for avatar images
+  const handleImageError = (e) => {
+    // Fallback to a default avatar if the image fails to load
+    e.target.onerror = null;
+    e.target.src = 'https://api.dicebear.com/6.x/initials/svg?seed=' + (alt || 'User');
+  };
   
   if (isLottie) {
     return (
@@ -40,8 +47,16 @@ const AnimatedAvatar = ({ src, alt, className, size = 40 }) => {
     );
   }
   
-  // Fallback to regular image
-  return <img src={src} alt={alt} className={className} />;
+  // Fallback to regular image with error handling
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className} 
+      onError={handleImageError}
+      style={size ? { width: size, height: size, objectFit: 'cover' } : {}}
+    />
+  );
 };
 
 export default AnimatedAvatar;

@@ -8,7 +8,6 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
   
   if (isStoryMode) {
     if (isAI) {
-      // AI Narration - full width, styled as vintage story text
       return (
         <div className="w-full mb-8 fade-in-up">
           <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden w-full">
