@@ -12,7 +12,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
       // AI Narration - full width, styled as story text
       return (
         <div className="w-full mb-8 fade-in-up">
-          <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden">
+          <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden w-full">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-black/5 to-amber-500/5 opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center mb-4">
@@ -37,60 +37,31 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
           </div>
         </div>
       );
-    } else if (isUser) {
-      // User Action - styled differently based on input type
-      const isContinue = message.inputType === 'continue';
-      return (
-        <div className="flex w-full mb-6 justify-end slide-in-left">
-          <div className={`w-full max-w-[95%] p-4 rounded-2xl relative overflow-hidden ${
-            isContinue 
-              ? 'glass border border-gray-700 text-gray-200'
-              : 'bg-gradient-to-r from-gray-800 to-gray-900 text-white'
-          }`}>
-            <div className="flex items-center mb-2">
-              <div className={`w-2 h-2 rounded-full mr-2 ${
-                isContinue ? 'bg-gray-400' : 'bg-gray-300'
-              }`}></div>
-              <span className="text-xs font-bold uppercase tracking-wider opacity-90">
-                {isContinue ? '⏭️ Continue' : '⚔️ Action'}
-              </span>
-            </div>
-            <p className="whitespace-pre-wrap break-words">
-              {message.text}
-            </p>
-            <div className="text-xs mt-2 opacity-75 text-right">
-              {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
-          </div>
-          {/* Removed the user avatar */}
-        </div>
-      );
     }
+    // Don't render user messages
+    return null;
   }
   
-  // Standard chat mode (fallback)
-  return (
-    <div className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'} fade-in-up`}>
-      {!isUser && (
+  // Standard chat mode - only render AI messages
+  if (!isUser) {
+    return (
+      <div className="flex w-full mb-4 justify-start fade-in-up">
         <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 mr-2 flex items-center justify-center">
           <span className="text-sm font-bold text-white">AI</span>
         </div>
-      )}
-      
-      <div 
-        className={`max-w-[95%] p-3 rounded-lg ${isUser 
-          ? 'bg-gray-800 text-white rounded-tr-none' 
-          : 'glass border border-slate-600 text-slate-200 rounded-tl-none'}`}
-      >
-        <p className="whitespace-pre-wrap break-words">{message.text}</p>
-        <div className={`text-xs mt-1 ${isUser ? 'text-gray-300' : 'text-slate-400'}`}>
-          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        
+        <div className="w-full glass border border-slate-600 text-slate-200 rounded-lg p-3">
+          <p className="whitespace-pre-wrap break-words">{message.text}</p>
+          <div className="text-xs mt-1 text-slate-400">
+            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       </div>
-      
-      {/* Removed the user avatar */}
-    </div>
-  );
+    );
+  }
+  
+  // Don't render user messages
+  return null;
 };
 
 export default MessageBubble;

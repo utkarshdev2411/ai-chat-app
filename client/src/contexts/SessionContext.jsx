@@ -138,17 +138,7 @@ export const SessionProvider = ({ children }) => {
     setSending(true);
     
     try {
-      // Optimistically add user action to UI (only if it's a custom action)
-      if (actionType === 'action') {
-        const userAction = {
-          role: 'user',
-          text: text.trim(),
-          inputType: actionType,
-          timestamp: new Date()
-        };
-        
-        setMessages(prevMessages => [...prevMessages, userAction]);
-      }
+      // Don't add user action to UI anymore
       
       // Send to API
       const res = await axios.post(
@@ -159,24 +149,35 @@ export const SessionProvider = ({ children }) => {
         }
       );
       
-      // Add AI story response to messages
+      // Get AI story response
       const storyUpdate = res.data.storyUpdate;
+      
+      // Update messages - combining with previous AI message if there is one
       setMessages(prevMessages => {
-        // If this was a continue action, add both user continue and AI response
-        if (actionType === 'continue') {
-          const continueAction = {
-            role: 'user',
-            text: 'Continue the story...',
-            inputType: 'continue',
-            timestamp: new Date(storyUpdate.timestamp - 1000) // Slightly before AI response
+        const aiMessages = prevMessages.filter(msg => msg.role === 'ai');
+        
+        // If there's a previous AI message, append text to it
+        if (aiMessages.length > 0) {
+          const lastAiMessage = aiMessages[aiMessages.length - 1];
+          
+          // Create a new message with combined text
+          const combinedMessage = {
+            ...lastAiMessage,
+            text: lastAiMessage.text + "\n\n" + storyUpdate.text,
+            timestamp: storyUpdate.timestamp || new Date()
           };
-          return [...prevMessages, continueAction, storyUpdate];
+          
+          // Replace the last AI message with combined one
+          return prevMessages.map(msg => 
+            (msg.role === 'ai' && msg.id === lastAiMessage.id) ? combinedMessage : msg
+          );
         }
-        // For custom actions, just add the AI response
+        
+        // If no previous AI message, just add the new one
         return [...prevMessages, storyUpdate];
       });
-      setError(null);
       
+      setError(null);
       return storyUpdate;
     } catch (err) {
       console.error('Error submitting action:', err);

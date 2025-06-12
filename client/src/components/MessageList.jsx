@@ -2,10 +2,21 @@ import React from 'react';
 import MessageBubble from './MessageBubble';
 
 const MessageList = ({ messages, loading, typingIndicator, isStoryMode = false }) => {
+  // Filter out user messages and combine AI messages
+  const processedMessages = React.useMemo(() => {
+    if (!messages || messages.length === 0) return [];
+    
+    // Only keep AI messages
+    const aiMessages = messages.filter(msg => msg.role === 'ai');
+    
+    // Return AI messages as is
+    return aiMessages;
+  }, [messages]);
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4 py-4">
-      {messages && messages.length > 0 ? (
-        messages.map((message, index) => (
+    <div className="w-full max-w-full mx-auto space-y-4 py-4">
+      {processedMessages && processedMessages.length > 0 ? (
+        processedMessages.map((message, index) => (
           <MessageBubble
             key={message.id || index}
             message={message}
