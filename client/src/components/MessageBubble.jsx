@@ -11,25 +11,28 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
     if (isAI) {
       // AI Narration - full width, styled as story text
       return (
-        <div className="w-full mb-6">
-          <div className="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 rounded-r-lg">
-            <div className="flex items-center mb-2">
-              <div className="flex-shrink-0 h-6 w-6 rounded-full bg-amber-500 mr-2 flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
+        <div className="w-full mb-8 fade-in-up">
+          <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-purple-500/5 to-amber-500/5 opacity-50"></div>
+            <div className="relative z-10">
+              <div className="flex items-center mb-4">
+                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 mr-3 flex items-center justify-center glow-amber">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <span className="text-sm font-bold text-amber-300 uppercase tracking-wider">
+                  📜 Chronicle
+                </span>
+                <span className="ml-auto text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded-lg">
+                  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
-              <span className="text-xs font-medium text-amber-700 dark:text-amber-300 uppercase tracking-wide">
-                Story
-              </span>
-              <span className="ml-auto text-xs text-gray-500 dark:text-gray-400">
-                {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </span>
-            </div>
-            <div className="prose prose-amber dark:prose-invert max-w-none">
-              <p className="text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
-                {message.text}
-              </p>
+              <div className="prose-story">
+                <p className="text-slate-200 leading-relaxed whitespace-pre-wrap text-lg">
+                  {message.text}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -38,28 +41,66 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
       // User Action - styled differently based on input type
       const isContinue = message.inputType === 'continue';
       return (
-        <div className="flex w-full mb-4 justify-end">
-          <div className={`max-w-[70%] p-3 rounded-lg ${
+        <div className="flex w-full mb-6 justify-end slide-in-left">
+          <div className={`max-w-[75%] p-4 rounded-2xl relative overflow-hidden ${
             isContinue 
-              ? 'bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 text-purple-800 dark:text-purple-200'
-              : 'bg-blue-500 text-white'
-          } rounded-tr-none`}>
-            <div className="flex items-center mb-1">
-              <span className="text-xs font-medium uppercase tracking-wide opacity-75">
-                {isContinue ? 'Continue' : 'Action'}
+              ? 'glass border border-purple-500/30 text-purple-200'
+              : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white glow-blue'
+          }`}>
+            <div className="flex items-center mb-2">
+              <div className={`w-2 h-2 rounded-full mr-2 ${
+                isContinue ? 'bg-purple-400' : 'bg-blue-300'
+              }`}></div>
+              <span className="text-xs font-bold uppercase tracking-wider opacity-90">
+                {isContinue ? '⏭️ Continue' : '⚔️ Action'}
               </span>
             </div>
-            <p className="whitespace-pre-wrap break-words text-sm">
+            <p className="whitespace-pre-wrap break-words">
               {message.text}
             </p>
-            <div className={`text-xs mt-1 opacity-75`}>
+            <div className="text-xs mt-2 opacity-75 text-right">
               {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
-          <div 
-            className="flex-shrink-0 h-8 w-8 rounded-full ml-2 flex items-center justify-center overflow-hidden"
-            style={{ backgroundColor: !user?.avatar ? '#3B82F6' : 'transparent' }}
-          >
+          <div className="flex-shrink-0 h-10 w-10 rounded-full ml-3 bg-gradient-to-r from-purple-500 to-blue-500 p-0.5 hover-lift">
+            <div className="h-full w-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
+              {user?.avatar ? (
+                <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
+              ) : (
+                <span className="text-sm font-bold text-white">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+  
+  // Standard chat mode (fallback)
+  return (
+    <div className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'} fade-in-up`}>
+      {!isUser && (
+        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 mr-2 flex items-center justify-center">
+          <span className="text-sm font-bold text-white">AI</span>
+        </div>
+      )}
+      
+      <div 
+        className={`max-w-[80%] p-3 rounded-lg ${isUser 
+          ? 'bg-blue-500 text-white rounded-tr-none' 
+          : 'glass border border-slate-600 text-slate-200 rounded-tl-none'}`}
+      >
+        <p className="whitespace-pre-wrap break-words">{message.text}</p>
+        <div className={`text-xs mt-1 ${isUser ? 'text-blue-100' : 'text-slate-400'}`}>
+          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      </div>
+      
+      {isUser && (
+        <div className="flex-shrink-0 h-8 w-8 rounded-full ml-2 bg-gradient-to-r from-purple-500 to-blue-500 p-0.5">
+          <div className="h-full w-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
             {user?.avatar ? (
               <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
             ) : (
@@ -68,43 +109,6 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
               </span>
             )}
           </div>
-        </div>
-      );
-    }
-  }
-  
-  // Standard chat mode
-  return (
-    <div className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
-      {!isUser && (
-        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-300 mr-2 flex items-center justify-center">
-          <span className="text-sm font-bold">AI</span>
-        </div>
-      )}
-      
-      <div 
-        className={`max-w-[80%] p-3 rounded-lg ${isUser 
-          ? 'bg-blue-500 text-white rounded-tr-none' 
-          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none'}`}
-      >
-        <p className="whitespace-pre-wrap break-words">{message.text}</p>
-        <div className={`text-xs mt-1 ${isUser ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}>
-          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </div>
-      </div>
-      
-      {isUser && (
-        <div 
-          className="flex-shrink-0 h-8 w-8 rounded-full ml-2 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: !user?.avatar ? '#3B82F6' : 'transparent' }}
-        >
-          {user?.avatar ? (
-            <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
-          ) : (
-            <span className="text-sm font-bold text-white">
-              {user?.email?.charAt(0).toUpperCase() || 'U'}
-            </span>
-          )}
         </div>
       )}
     </div>

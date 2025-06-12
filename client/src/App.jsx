@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
 import { SessionProvider } from './contexts/SessionContext';
 import PrivateRoute from './components/PrivateRoute';
 import LoginPage from './pages/LoginPage';
@@ -11,8 +10,8 @@ import StoryPage from './pages/ChatPage'; // Renamed to StoryPage internally
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
+    <div className="dark">
+      <AuthProvider>
         <Router>
           <Routes>
           {/* Public routes */}
@@ -32,8 +31,8 @@ function App() {
           </Route>
         </Routes>
       </Router>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </div>
   );
 }
 

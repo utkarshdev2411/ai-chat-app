@@ -45,100 +45,112 @@ const MessageInput = ({ onSendMessage, onSubmitAction, disabled, isStoryMode = f
 
   if (isStoryMode) {
     return (
-      <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
-        {/* Continue Story Button */}
-        <div className="mb-3">
-          <button
-            onClick={handleContinue}
-            className="w-full px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center"
-            disabled={disabled}
-          >
-            {disabled ? (
-              <span className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Continuing Story...
-              </span>
-            ) : (
-              <span className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-                Continue Story
-              </span>
-            )}
-          </button>
-        </div>
+      <div className="glass border-t border-purple-500/30 p-6 relative">
+        {/* Ambient glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-50"></div>
         
-        {/* Custom Action Input */}
-        <form onSubmit={handleSubmit} className="flex items-end">
-          <div className="flex-grow relative">
-            <textarea
-              ref={textareaRef}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="What do you do? Describe your action..."
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none overflow-hidden"
-              rows="1"
+        <div className="relative z-10">
+          {/* Continue Story Button */}
+          <div className="mb-4">
+            <button
+              onClick={handleContinue}
+              className="btn-primary w-full px-6 py-4 text-white font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center hover-lift glow-purple"
               disabled={disabled}
-            />
+            >
+              {disabled ? (
+                <span className="flex items-center">
+                  <div className="typing-dots mr-3">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  Weaving the tale...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  ✨ Continue the Chronicle
+                </span>
+              )}
+            </button>
           </div>
-          <button
-            type="submit"
-            className="ml-3 px-4 py-3 bg-blue-500 text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-blue-600 transition"
-            disabled={!message.trim() || disabled}
-          >
-            {disabled ? (
-              <span className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Sending
-              </span>
-            ) : 'Act'}
-          </button>
-        </form>
+          
+          {/* Custom Action Input */}
+          <form onSubmit={handleSubmit} className="flex items-end space-x-4">
+            <div className="flex-grow relative">
+              <label className="block text-sm font-medium text-amber-300 mb-2">
+                🎭 What do you do?
+              </label>
+              <textarea
+                ref={textareaRef}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Describe your character's action or decision..."
+                className="w-full p-4 glass border border-purple-500/30 rounded-2xl focus:outline-none focus:border-purple-400 text-slate-200 placeholder-slate-400 resize-none overflow-hidden transition-all duration-300"
+                rows="1"
+                disabled={disabled}
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn-secondary px-6 py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover-lift flex items-center justify-center min-w-[120px]"
+              disabled={!message.trim() || disabled}
+            >
+              {disabled ? (
+                <div className="typing-dots">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              ) : (
+                <span className="flex items-center font-bold">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  Act
+                </span>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
 
-  // Standard chat mode
+  // Standard chat mode (fallback)
   return (
-    <form onSubmit={handleSubmit} className="flex items-end bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-3">
-      <div className="flex-grow relative">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto w-full">
+      <div className="flex items-end border rounded-lg bg-gray-900 border-gray-700 overflow-hidden focus-within:ring-1 focus-within:ring-gray-500">
         <textarea
-          ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none overflow-hidden"
+          placeholder={isStoryMode ? "What do you want to do next?" : "Type a message..."}
           rows="1"
-          disabled={disabled}
+          className="flex-1 px-4 py-3 bg-transparent border-none resize-none focus:ring-0 text-gray-200 placeholder-gray-500 focus:outline-none"
+          style={{ minHeight: '50px', maxHeight: '150px' }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e);
+            }
+          }}
         />
+        <button
+          type="submit"
+          disabled={disabled || !message.trim()}
+          className="h-10 px-4 mr-2 mb-2 rounded-md bg-gray-800 text-gray-200 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <span className="mr-1">Send</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
       </div>
-      <button
-        type="submit"
-        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-blue-600 transition"
-        disabled={!message.trim() || disabled}
-      >
-        {disabled ? (
-          <span className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Sending
-          </span>
-        ) : 'Send'}
-      </button>
     </form>
   );
 };
 
 export default MessageInput;
-
