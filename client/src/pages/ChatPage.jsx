@@ -205,7 +205,6 @@ const StoryPage = () => {
         </div>
       </div>
 
-      {/* Main story area - ensure it doesn't get covered */}
       <div className="flex-1 flex flex-col h-full overflow-hidden relative z-0">
         {/* Header - MODIFY THIS SECTION to include settings button */}
         <header className="h-16 bg-black bg-opacity-60 backdrop-blur-md border-b border-gray-800 flex items-center justify-between px-4 lg:px-6 relative z-10">
@@ -224,8 +223,8 @@ const StoryPage = () => {
             <div className="text-sm text-gray-300 font-medium">
               {user?.email}
             </div>
-            
-            {/* Settings button - integrated into the header */}
+
+            {/* Settings button */}
             <button 
               onClick={() => setShowSettingsSidebar(!showSettingsSidebar)}
               className="p-2 rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center"
