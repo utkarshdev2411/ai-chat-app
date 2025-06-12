@@ -8,15 +8,15 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
   
   if (isStoryMode) {
     if (isAI) {
-      // AI Narration - full width, styled as story text
+      // AI Narration - full width, styled as vintage story text
       return (
         <div className="w-full mb-8 fade-in-up">
           <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden w-full">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-black/5 to-amber-500/5 opacity-50"></div>
             <div className="relative z-10">
-              <div className="flex items-center mb-4">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 mr-3 flex items-center justify-center glow-amber">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center mb-6">
+                <div className="flex-shrink-0 h-9 w-9 rounded-full bg-gradient-to-r from-amber-600 to-amber-700 mr-3 flex items-center justify-center glow-amber">
+                  <svg className="w-5 h-5 text-amber-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
@@ -30,7 +30,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
                 )}
               </div>
               <div className="prose-story">
-                <p className="text-slate-200 leading-relaxed whitespace-pre-wrap text-lg">
+                <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">
                   {message.text}
                 </p>
               </div>
