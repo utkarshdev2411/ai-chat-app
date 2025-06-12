@@ -13,7 +13,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
       return (
         <div className="w-full mb-8 fade-in-up">
           <div className="story-bubble glass p-6 rounded-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-purple-500/5 to-amber-500/5 opacity-50"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-black/5 to-amber-500/5 opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center mb-4">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 mr-3 flex items-center justify-center glow-amber">
@@ -42,14 +42,14 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
       const isContinue = message.inputType === 'continue';
       return (
         <div className="flex w-full mb-6 justify-end slide-in-left">
-          <div className={`max-w-[75%] p-4 rounded-2xl relative overflow-hidden ${
+          <div className={`w-full max-w-[95%] p-4 rounded-2xl relative overflow-hidden ${
             isContinue 
-              ? 'glass border border-purple-500/30 text-purple-200'
-              : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white glow-blue'
+              ? 'glass border border-gray-700 text-gray-200'
+              : 'bg-gradient-to-r from-gray-800 to-gray-900 text-white'
           }`}>
             <div className="flex items-center mb-2">
               <div className={`w-2 h-2 rounded-full mr-2 ${
-                isContinue ? 'bg-purple-400' : 'bg-blue-300'
+                isContinue ? 'bg-gray-400' : 'bg-gray-300'
               }`}></div>
               <span className="text-xs font-bold uppercase tracking-wider opacity-90">
                 {isContinue ? '⏭️ Continue' : '⚔️ Action'}
@@ -62,17 +62,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
               {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
-          <div className="flex-shrink-0 h-10 w-10 rounded-full ml-3 bg-gradient-to-r from-purple-500 to-blue-500 p-0.5 hover-lift">
-            <div className="h-full w-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-              {user?.avatar ? (
-                <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
-              ) : (
-                <span className="text-sm font-bold text-white">
-                  {user?.email?.charAt(0).toUpperCase() || 'U'}
-                </span>
-              )}
-            </div>
-          </div>
+          {/* Removed the user avatar */}
         </div>
       );
     }
@@ -88,29 +78,17 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
       )}
       
       <div 
-        className={`max-w-[80%] p-3 rounded-lg ${isUser 
-          ? 'bg-blue-500 text-white rounded-tr-none' 
+        className={`max-w-[95%] p-3 rounded-lg ${isUser 
+          ? 'bg-gray-800 text-white rounded-tr-none' 
           : 'glass border border-slate-600 text-slate-200 rounded-tl-none'}`}
       >
         <p className="whitespace-pre-wrap break-words">{message.text}</p>
-        <div className={`text-xs mt-1 ${isUser ? 'text-blue-100' : 'text-slate-400'}`}>
+        <div className={`text-xs mt-1 ${isUser ? 'text-gray-300' : 'text-slate-400'}`}>
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
       
-      {isUser && (
-        <div className="flex-shrink-0 h-8 w-8 rounded-full ml-2 bg-gradient-to-r from-purple-500 to-blue-500 p-0.5">
-          <div className="h-full w-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-            {user?.avatar ? (
-              <AnimatedAvatar src={user.avatar} alt="User avatar" className="h-full w-full object-cover" size={32} />
-            ) : (
-              <span className="text-sm font-bold text-white">
-                {user?.email?.charAt(0).toUpperCase() || 'U'}
-              </span>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Removed the user avatar */}
     </div>
   );
 };

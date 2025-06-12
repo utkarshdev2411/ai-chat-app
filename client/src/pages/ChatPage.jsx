@@ -154,7 +154,7 @@ const StoryPage = () => {
         )}
 
         {/* Messages */}
-        <div className="flex-1 relative overflow-y-auto thin-scrollbar px-4 py-2">
+        <div className="flex-1 relative overflow-y-auto thin-scrollbar px-4 py-2 w-full">
           <MessageList
             messages={messages}
             loading={loading}
