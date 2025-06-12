@@ -1,6 +1,7 @@
 const Session = require('../models/Session');
 const Scenario = require('../models/Scenario');
-const { generateStoryResponse } = require('../utils/gemini');
+// Change this import to use the langchain implementation
+const { generateStoryResponse } = require('../utils/langchain');
 
 // Get all available scenarios
 exports.getScenarios = async (req, res) => {
