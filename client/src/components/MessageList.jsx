@@ -2,15 +2,29 @@ import React from 'react';
 import MessageBubble from './MessageBubble';
 
 const MessageList = ({ messages, loading, typingIndicator, isStoryMode = false }) => {
-  // Filter out user messages and combine AI messages
+  // Group AI messages together
   const processedMessages = React.useMemo(() => {
     if (!messages || messages.length === 0) return [];
     
-    // Only keep AI messages
+    // Filter out user messages completely
     const aiMessages = messages.filter(msg => msg.role === 'ai');
     
-    // Return AI messages as is
-    return aiMessages;
+    // Combine sequential AI messages
+    const combinedMessages = [];
+    let currentMessage = null;
+    
+    for (const message of aiMessages) {
+      if (!currentMessage) {
+        currentMessage = { ...message };
+        combinedMessages.push(currentMessage);
+      } else {
+        // Append to existing message
+        currentMessage.text += "\n\n" + message.text;
+        currentMessage.timestamp = message.timestamp; // Update timestamp to latest
+      }
+    }
+    
+    return combinedMessages;
   }, [messages]);
 
   return (
@@ -18,7 +32,7 @@ const MessageList = ({ messages, loading, typingIndicator, isStoryMode = false }
       {processedMessages && processedMessages.length > 0 ? (
         processedMessages.map((message, index) => (
           <MessageBubble
-            key={message.id || index}
+            key={index}  // Using index since we've combined messages
             message={message}
             isStoryMode={isStoryMode}
           />

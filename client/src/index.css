@@ -315,3 +315,43 @@ input:focus, textarea:focus, button:focus {
   }
 }
 
+/* Add these styles to the bottom of the file */
+
+/* Settings sidebar styles */
+.settings-sidebar {
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Selected item styles */
+.selected-item {
+  border-color: var(--purple-glow);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+
+/* Settings panel items */
+.settings-option {
+  transition: all 0.2s ease;
+}
+
+.settings-option:hover {
+  background-color: rgba(139, 92, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.settings-option.active {
+  background-color: rgba(139, 92, 246, 0.2);
+  border-color: var(--purple-glow);
+}
+

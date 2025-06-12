@@ -4,7 +4,6 @@ import AnimatedAvatar from './AnimatedAvatar';
 
 const MessageBubble = ({ message, isStoryMode = false }) => {
   const { user } = useAuth();
-  const isUser = message.role === 'user';
   const isAI = message.role === 'ai';
   
   if (isStoryMode) {
@@ -24,9 +23,11 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
                 <span className="text-sm font-bold text-amber-300 uppercase tracking-wider">
                   📜 Chronicle
                 </span>
-                <span className="ml-auto text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded-lg">
-                  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
+                {message.timestamp && (
+                  <span className="ml-auto text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded-lg">
+                    {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                )}
               </div>
               <div className="prose-story">
                 <p className="text-slate-200 leading-relaxed whitespace-pre-wrap text-lg">
@@ -43,9 +44,9 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
   }
   
   // Standard chat mode - only render AI messages
-  if (!isUser) {
+  if (isAI) {
     return (
-      <div className="flex w-full mb-4 justify-start fade-in-up">
+      <div className="flex w-full mb-4 fade-in-up">
         <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 mr-2 flex items-center justify-center">
           <span className="text-sm font-bold text-white">AI</span>
         </div>
@@ -53,7 +54,7 @@ const MessageBubble = ({ message, isStoryMode = false }) => {
         <div className="w-full glass border border-slate-600 text-slate-200 rounded-lg p-3">
           <p className="whitespace-pre-wrap break-words">{message.text}</p>
           <div className="text-xs mt-1 text-slate-400">
-            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {message.timestamp && new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
         </div>
       </div>
